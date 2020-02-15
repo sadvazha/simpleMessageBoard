@@ -1,8 +1,11 @@
-const config = require('./config');
-const express = require('express');
+'use strict';
 
+const serverless = require('serverless-http');
+const express = require('express');
 const app = express();
 
-app.use(express.json(config.expressJsonBodyParserOptions));
+app.get('/', function (req, res) {
+  res.send('Hello World!')
+});
 
-app.listen(config.server.port, config.server.host, () => console.log(`Listening on: ${config.server.host}:${config.server.port}`));
+module.exports.handler = serverless(app);
