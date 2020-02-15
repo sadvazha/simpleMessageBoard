@@ -1,6 +1,8 @@
+const config = require('./config');
 const express = require('express');
+
 const app = express();
 
-app.use(express.json());
+app.use(express.json(config.expressJsonBodyParserOptions));
 
-app.listen(3000, () => console.log(`Listening on: 3000`));
+app.listen(config.server.port, config.server.host, () => console.log(`Listening on: ${config.server.host}:${config.server.port}`));
