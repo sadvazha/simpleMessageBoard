@@ -1,0 +1,48 @@
+service: my-express-application
+
+custom:
+  posts: 'posts-table-${self:provider.stage}'
+
+provider:
+  name: aws
+  runtime: nodejs12.x
+  stage: dev
+  region: us-east-1
+  iamRoleStatements:
+    - Effect: Allow
+      Action:
+        - dynamodb:Query
+        - dynamodb:Scan
+        - dynamodb:GetItem
+        - dynamodb:PutItem
+        - dynamodb:UpdateItem
+        - dynamodb:DeleteItem
+      Resource:
+        - { "Fn::GetAtt": ["PostsDynamoDBTable", "Arn" ] }
+  environment:
+    POSTS_TABLE: ${self:custom.posts}
+
+functions:
+  app:
+    handler: index.handler
+    events:
+      - http: ANY /
+      - http: 'ANY {proxy+}'
+
+resources:
+  Resources:
+    PostsDynamoDBTable:
+      Type: 'AWS::DynamoDB::Table'
+      Properties:
+        AttributeDefinitions:
+          -
+            AttributeName: postId
+            AttributeType: S
+        KeySchema:
+          -
+            AttributeName: postId
+            KeyType: HASH
+        ProvisionedThroughput:
+          ReadCapacityUnits: 1
+          WriteCapacityUnits: 1
+        TableName: ${self:custom.posts}
