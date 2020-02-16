@@ -1,4 +1,4 @@
-service: my-express-application
+service: simple-message-board
 
 custom:
   posts: 'posts-table-${self:provider.stage}'
