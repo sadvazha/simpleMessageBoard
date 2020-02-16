@@ -23,7 +23,15 @@ functions:
     handler: index.handler
     events:
       - http: ANY /v1/
-      - http: 'ANY {proxy+}'
+      - http: ANY /v1/{proxy+}
+  getPosts:
+    handler: index.handler
+    events:
+      - http: GET /v1/posts/
+  createPosts:
+    handler: index.handler
+    events:
+      - http: POST /v1/posts
 
 resources:
   Resources:
