@@ -23,13 +23,14 @@ app.get('/v1/posts', async function (req, res, next) {
         const postList = await dynamoDb.scan(params).promise();
         res.json({ postList });
     } catch (e) {
-        res.status(404).json({error});
+        console.error(e);
+        res.sendStatus(500);
     }
 });
 
 app.post('/v1/posts', async function (req, res, next) {
     if (!req.body.text || typeof req.body.text !== 'string') {
-        res.status(400).json({ error: '"text" must be provided and must be type of string and must not be empty' });
+        return res.status(400).json({ error: '"text" must be provided and must be type of string and must not be empty' });
     }
 
     const { text } = req.body;
@@ -45,9 +46,10 @@ app.post('/v1/posts', async function (req, res, next) {
 
     try {
         await dynamoDb.put(post).promise();
-        res.json({ postId, text });
+        res.json({ postId });
     } catch (err) {
-        res.status(500).json({error});
+        console.error(err);
+        res.sendStatus(500);
     }
 });
 
