@@ -11,12 +11,8 @@ provider:
   iamRoleStatements:
     - Effect: Allow
       Action:
-        - dynamodb:Query
         - dynamodb:Scan
-        - dynamodb:GetItem
         - dynamodb:PutItem
-        - dynamodb:UpdateItem
-        - dynamodb:DeleteItem
       Resource:
         - { "Fn::GetAtt": ["PostsDynamoDBTable", "Arn" ] }
   environment:
@@ -26,7 +22,7 @@ functions:
   app:
     handler: index.handler
     events:
-      - http: ANY /
+      - http: ANY /v1/
       - http: 'ANY {proxy+}'
 
 resources:
