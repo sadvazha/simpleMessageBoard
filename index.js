@@ -1,6 +1,6 @@
 'use strict';
 
-const AWS = require('aws-sdk');
+const { dynamoDbInstance: dynamoDb} = require('./db');
 const express = require('express');
 const serverless = require('serverless-http');
 const uuid = require('uuid');
