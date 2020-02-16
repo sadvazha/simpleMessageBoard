@@ -11,7 +11,7 @@ if (IS_OFFLINE === 'true') {
   });
 } else {
   dynamoDbInstance = new AWS.DynamoDB.DocumentClient();
-};
+}
 
 module.exports = {
     dynamoDbInstance,

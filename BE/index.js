@@ -12,7 +12,7 @@ app.use(express.json());
 const POSTS_TABLE = process.env.POSTS_TABLE;
 
 
-app.get('/v1/posts', async function (req, res, next) {
+app.get('/v1/posts', async function (req, res) {
     const params = {
         TableName: POSTS_TABLE,
         Limit: 5,
@@ -28,7 +28,7 @@ app.get('/v1/posts', async function (req, res, next) {
     }
 });
 
-app.post('/v1/posts', async function (req, res, next) {
+app.post('/v1/posts', async function (req, res) {
     if (!req.body.text || typeof req.body.text !== 'string') {
         return res.status(400).json({ error: '"text" must be provided and must be type of string and must not be empty' });
     }

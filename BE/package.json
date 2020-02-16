@@ -4,7 +4,8 @@
   "description": "Simple message board",
   "main": "index.js",
   "scripts": {
-    "test": "mocha ./test/index.js"
+    "test": "mocha ./test/index.js",
+    "eslint": "eslint ."
   },
   "repository": {
     "type": "git",
@@ -26,6 +27,7 @@
   "devDependencies": {
     "bent": "^7.0.6",
     "chai": "^4.2.0",
+    "eslint": "^6.8.0",
     "mocha": "^7.0.1",
     "serverless-dynamodb-local": "^0.2.39",
     "serverless-offline": "^5.12.1"
