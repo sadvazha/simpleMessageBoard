@@ -2,6 +2,11 @@ service: my-express-application
 
 custom:
   posts: 'posts-table-${self:provider.stage}'
+  dynamodb:
+    start:
+      migrate: true
+    stages:
+      - ${self:provider.stage}
 
 provider:
   name: aws
@@ -50,3 +55,7 @@ resources:
           ReadCapacityUnits: 1
           WriteCapacityUnits: 1
         TableName: ${self:custom.posts}
+
+plugins:
+  - serverless-dynamodb-local
+  - serverless-offline

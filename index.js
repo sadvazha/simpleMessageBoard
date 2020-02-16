@@ -1,6 +1,6 @@
 'use strict';
 
-const AWS = require('aws-sdk');
+const { dynamoDbInstance: dynamoDb} = require('./db');
 const express = require('express');
 const serverless = require('serverless-http');
 const uuid = require('uuid');
@@ -11,7 +11,6 @@ app.use(express.json());
 
 const POSTS_TABLE = process.env.POSTS_TABLE;
 
-const dynamoDb = new AWS.DynamoDB.DocumentClient();
 
 app.get('/v1/posts', async function (req, res, next) {
     const params = {
@@ -21,6 +20,7 @@ app.get('/v1/posts', async function (req, res, next) {
     
     try {
         const postList = await dynamoDb.scan(params).promise();
+        // TODO: do not return whole db object
         res.json({ postList });
     } catch (e) {
         console.error(e);
@@ -41,12 +41,13 @@ app.post('/v1/posts', async function (req, res, next) {
         Item: {
             postId,
             text,
+            date: new Date(),
         },
     };
 
     try {
         await dynamoDb.put(post).promise();
-        res.json({ postId });
+        res.status(201).json({ postId });
     } catch (err) {
         console.error(err);
         res.sendStatus(500);
