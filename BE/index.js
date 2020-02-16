@@ -7,7 +7,10 @@ const uuid = require('uuid');
 
 const app = express();
 
-app.use(express.json());
+app.use(express.json({
+    limit: '256kb',
+    strict: true,
+}));
 
 const POSTS_TABLE = process.env.POSTS_TABLE;
 const ITEMS_LIMIT_PER_REQUEST = 5;
