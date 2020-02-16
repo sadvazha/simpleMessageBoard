@@ -10,18 +10,27 @@ const app = express();
 app.use(express.json());
 
 const POSTS_TABLE = process.env.POSTS_TABLE;
-
+const ITEMS_LIMIT_PER_REQUEST = 5;
 
 app.get('/v1/posts', async function (req, res) {
     const params = {
         TableName: POSTS_TABLE,
-        Limit: 5,
+        Limit: ITEMS_LIMIT_PER_REQUEST,
     };
     
     try {
-        const postList = await dynamoDb.scan(params).promise();
-        // TODO: do not return whole db object
-        res.json({ postList });
+        const posts = [];
+        let finished = true;
+
+        while (posts.length < ITEMS_LIMIT_PER_REQUEST && finished) {
+            const postList = await dynamoDb.scan(params).promise();
+            if (!postList.LastEvaluatedKey) {
+                finished = false;
+            }
+            posts.push(...postList.Items);
+        }
+
+        res.json({ posts });
     } catch (e) {
         console.error(e);
         res.sendStatus(500);
@@ -41,7 +50,7 @@ app.post('/v1/posts', async function (req, res) {
         Item: {
             postId,
             text,
-            date: new Date(),
+            date: Date.now(),
         },
     };
 
